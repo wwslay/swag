@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -64,7 +63,7 @@ video.bg{
   opacity:.6;
 }
 
-/* RECTANGLE CARD */
+/* CARD */
 .card{
   position:absolute;
   top:50%;
@@ -82,45 +81,36 @@ video.bg{
   transition:opacity .6s;
 }
 
-.card.show{
-  opacity:1;
-}
+.card.show{opacity:1}
 
-/* CONTENT */
-.profile{
-  text-align:center;
-}
+/* PROFILE */
+.profile{text-align:center}
 
-/* AVATAR */
 .cover{
   width:110px;
   height:110px;
   border-radius:50%;
   object-fit:cover;
   margin-bottom:18px;
-  opacity:.95;
 }
 
-/* TEXT */
 .name{
   font-size:32px;
   font-weight:800;
-  letter-spacing:.4px;
 }
 
 .bio{
   font-size:14px;
   opacity:.55;
-  margin-top:6px;
-  margin-bottom:22px;
+  margin:6px 0 22px;
 }
 
 /* PLAYER */
 .player{
   display:flex;
   align-items:center;
-  gap:14px;
   justify-content:center;
+  gap:14px;
 }
 
 .player button{
@@ -132,42 +122,45 @@ video.bg{
   opacity:.7;
   transition:.2s;
 }
+.player button:hover{opacity:1}
 
-.player button:hover{
-  opacity:1;
-}
-
-.player input[type=range]{
-  width:200px;
+/* RANGE BASE */
+input[type=range]{
+  -webkit-appearance:none;
   appearance:none;
-  height:2px;
-  background:rgba(255,255,255,.25);
-  outline:none;
+  background:transparent;
   cursor:pointer;
 }
 
-.player input[type=range]::-webkit-slider-thumb{
-  appearance:none;
-  width:8px;
-  height:8px;
+/* PROGRESS */
+#progress{
+  width:200px;
+}
+#progress::-webkit-slider-runnable-track{
+  height:4px;
+  border-radius:6px;
+  background:rgba(255,255,255,.2);
+}
+#progress::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:10px;
+  height:10px;
   border-radius:50%;
   background:white;
+  margin-top:-3px;
 }
 
 /* VOLUME */
 .volume{
-  margin-top:16px;
+  margin-top:18px;
   display:flex;
   align-items:center;
   justify-content:center;
   gap:10px;
   opacity:.35;
-  transition:.2s;
+  transition:.25s;
 }
-
-.volume:hover{
-  opacity:.7;
-}
+.volume:hover{opacity:.75}
 
 .volume svg{
   width:18px;
@@ -176,47 +169,35 @@ video.bg{
   cursor:pointer;
 }
 
-.volume input{
-  width:90px;
+/* VOLUME SLIDER — GLASS STYLE */
+#volume{
+  width:100px;
+  --fill:70%;
 }
 
-/* COLOR PICKER */
-.color-picker-circle{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  background:white;
-  cursor:pointer;
-  opacity:.6;
-  transition:.3s;
-}
-
-.color-picker-circle:hover{
-  opacity:1;
-  transform:scale(1.1);
-}
-
-.color-picker-popup{
-  position:fixed;
-  bottom:70px;
-  right:20px;
-  background:rgba(0,0,0,.6);
-  backdrop-filter:blur(10px);
-  padding:12px;
-  border-radius:14px;
-  display:none;
-}
-
-.color-slider{
-  width:160px;
-  height:16px;
+#volume::-webkit-slider-runnable-track{
+  height:6px;
   border-radius:10px;
-  background:linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
-  position:relative;
-  cursor:pointer;
+  background:
+    linear-gradient(
+      to right,
+      var(--accent) var(--fill),
+      rgba(255,255,255,.15) var(--fill)
+    );
+}
+
+#volume::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:var(--accent);
+  margin-top:-4px;
+  box-shadow:0 0 12px rgba(255,255,255,.6);
+  transition:.2s;
+}
+#volume::-webkit-slider-thumb:hover{
+  transform:scale(1.15);
 }
 
 .thumb{
@@ -241,7 +222,7 @@ video.bg{
 
 <div class="enter" id="enter"><span>click</span></div>
 
-<div class="card hover-tilt" id="card">
+<div class="card" id="card">
   <div class="profile">
     <img src="cover.jpg" class="cover">
     <div class="name">@slayka</div>
@@ -269,7 +250,6 @@ video.bg{
 </div>
 
 <script>
-// AUDIO
 const enter=document.getElementById('enter')
 const card=document.getElementById('card')
 const audio=new Audio('swag.mp3')
@@ -278,12 +258,17 @@ const progress=document.getElementById('progress')
 const volume=document.getElementById('volume')
 const mute=document.getElementById('mute')
 
+function updateVolumeFill(){
+  volume.style.setProperty('--fill',(volume.value*100)+'%')
+}
+
 enter.onclick=()=>{
   enter.style.display='none'
   card.classList.add('show')
   audio.volume=volume.value
   audio.play()
   play.innerText='⏸'
+  updateVolumeFill()
 }
 
 play.onclick=()=>{
@@ -300,7 +285,10 @@ progress.oninput=()=>{
   audio.currentTime=progress.value/100*audio.duration
 }
 
-volume.oninput=()=>audio.volume=volume.value
+volume.oninput=()=>{
+  audio.volume=volume.value
+  updateVolumeFill()
+}
 
 mute.onclick=()=>{
   if(audio.volume>0){
@@ -310,48 +298,18 @@ mute.onclick=()=>{
     audio.volume=.7
     volume.value=.7
   }
+  updateVolumeFill()
 }
 
-/* HOVER TILT */
-let mouseX=0, mouseY=0, hovering=false
-card.addEventListener('mouseenter',()=>hovering=true)
-card.addEventListener('mouseleave',()=>hovering=false)
-
-document.addEventListener('mousemove',e=>{
-  if(hovering){
-    const r=card.getBoundingClientRect()
-    mouseX=(e.clientX-r.left-r.width/2)/18
-    mouseY=(e.clientY-r.top-r.height/2)/18
-  }else{
-    mouseX*=0.9
-    mouseY*=0.9
-  }
-})
-
-function tilt(){
-  card.style.transform=
-    `translate(-50%,-50%) rotateY(${mouseX}deg) rotateX(${-mouseY}deg)`
-  requestAnimationFrame(tilt)
-}
-tilt()
-
-/* BIO TYPING */
+/* BIO TYPE */
 const bioEl=document.getElementById('bio')
 const bioText='fuck insomnia'
 let i=0,d=false
 setInterval(()=>{
-  if(!d){i++;bioEl.textContent=bioText.slice(0,i);if(i===bioText.length)setTimeout(()=>d=true,1500)}
+  if(!d){i++;bioEl.textContent=bioText.slice(0,i);if(i===bioText.length)setTimeout(()=>d=true,1200)}
   else{i--;bioEl.textContent=bioText.slice(0,i);if(i===0)d=false}
-},150)
+},140)
 
-/* COLOR PICKER */
-const circle=document.getElementById('colorCircle')
-const popup=document.getElementById('colorPopup')
-let open=false
-circle.onclick=()=>{
-  open=!open
-  popup.style.display=open?'block':'none'
-}
 
 const slider=document.getElementById('colorSlider')
 const thumb=document.getElementById('thumb')
