@@ -4,13 +4,14 @@
 <meta charset="UTF-8">
 <title>@slayka</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
   --accent:#ffffff;
-  --glass:rgba(255,255,255,.06);
-  --border:rgba(255,255,255,.15);
+  --glass:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.18);
 }
 
 *{
@@ -25,24 +26,24 @@ body{
   background:black;
   color:white;
   overflow:hidden;
-  perspective:1200px;
+  perspective:1400px;
 }
 
-/* VIDEO BG */
+/* VIDEO */
 video.bg{
   position:fixed;
   inset:0;
   width:100%;
   height:100%;
   object-fit:cover;
-  filter:brightness(.35) blur(2px);
+  filter:brightness(.35) blur(2.5px) saturate(1.2);
   z-index:-2;
 }
 
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.55);
+  background:radial-gradient(circle at top,rgba(0,0,0,.3),rgba(0,0,0,.75));
   z-index:-1;
 }
 
@@ -53,32 +54,41 @@ video.bg{
   display:flex;
   align-items:center;
   justify-content:center;
-  backdrop-filter:blur(12px);
+  backdrop-filter:blur(18px);
   cursor:pointer;
   z-index:10;
 }
 
 .enter span{
-  font-size:28px;
-  opacity:.6;
+  font-size:30px;
+  opacity:.7;
+  letter-spacing:2px;
+  transition:.3s;
 }
+.enter:hover span{opacity:1}
 
 /* CARD */
 .card{
   position:absolute;
   top:50%;
   left:50%;
-  width:420px;
-  padding:34px 32px;
-  border-radius:22px;
-  background:var(--glass);
+  width:440px;
+  padding:36px 34px 40px;
+  border-radius:26px;
+  background:linear-gradient(
+    180deg,
+    rgba(255,255,255,.08),
+    rgba(255,255,255,.03)
+  );
   border:1px solid var(--border);
-  backdrop-filter:blur(25px);
+  backdrop-filter:blur(30px);
   transform:translate(-50%,-50%);
   transform-style:preserve-3d;
-  box-shadow:0 20px 80px rgba(0,0,0,.6);
+  box-shadow:
+    0 40px 120px rgba(0,0,0,.7),
+    0 0 80px rgba(255,255,255,.05);
   opacity:0;
-  transition:opacity .6s;
+  transition:opacity .7s, transform .15s;
 }
 
 .card.show{opacity:1}
@@ -87,22 +97,27 @@ video.bg{
 .profile{text-align:center}
 
 .cover{
-  width:110px;
-  height:110px;
+  width:120px;
+  height:120px;
   border-radius:50%;
   object-fit:cover;
   margin-bottom:18px;
+  box-shadow:
+    0 0 0 4px rgba(255,255,255,.08),
+    0 0 40px rgba(255,255,255,.25);
 }
 
 .name{
-  font-size:32px;
+  font-size:34px;
   font-weight:800;
+  letter-spacing:.5px;
 }
 
 .bio{
   font-size:14px;
-  opacity:.55;
-  margin:6px 0 22px;
+  opacity:.6;
+  margin:8px 0 26px;
+  min-height:18px;
 }
 
 /* PLAYER */
@@ -116,15 +131,16 @@ video.bg{
 .player button{
   background:none;
   border:none;
-  color:white;
-  font-size:18px;
+  color:var(--accent);
+  font-size:20px;
   cursor:pointer;
-  opacity:.7;
-  transition:.2s;
+  opacity:.8;
+  transition:.25s;
+  text-shadow:0 0 12px var(--accent);
 }
 .player button:hover{opacity:1}
 
-/* RANGE BASE */
+/* RANGE */
 input[type=range]{
   -webkit-appearance:none;
   appearance:none;
@@ -134,7 +150,7 @@ input[type=range]{
 
 /* PROGRESS */
 #progress{
-  width:200px;
+  width:210px;
 }
 #progress::-webkit-slider-runnable-track{
   height:4px;
@@ -143,35 +159,36 @@ input[type=range]{
 }
 #progress::-webkit-slider-thumb{
   -webkit-appearance:none;
-  width:10px;
-  height:10px;
+  width:11px;
+  height:11px;
   border-radius:50%;
   background:white;
-  margin-top:-3px;
+  margin-top:-3.5px;
 }
 
 /* VOLUME */
 .volume{
-  margin-top:18px;
+  margin-top:22px;
   display:flex;
   align-items:center;
   justify-content:center;
   gap:10px;
-  opacity:.35;
-  transition:.25s;
+  opacity:.4;
+  transition:.3s;
 }
-.volume:hover{opacity:.75}
+.volume:hover{opacity:.9}
 
 .volume svg{
   width:18px;
   height:18px;
-  fill:white;
+  fill:var(--accent);
   cursor:pointer;
+  filter:drop-shadow(0 0 6px var(--accent));
 }
 
-/* VOLUME SLIDER — GLASS STYLE */
+/* VOLUME SLIDER */
 #volume{
-  width:100px;
+  width:110px;
   --fill:70%;
 }
 
@@ -182,7 +199,7 @@ input[type=range]{
     linear-gradient(
       to right,
       var(--accent) var(--fill),
-      rgba(255,255,255,.15) var(--fill)
+      rgba(255,255,255,.18) var(--fill)
     );
 }
 
@@ -193,21 +210,31 @@ input[type=range]{
   border-radius:50%;
   background:var(--accent);
   margin-top:-4px;
-  box-shadow:0 0 12px rgba(255,255,255,.6);
-  transition:.2s;
-}
-#volume::-webkit-slider-thumb:hover{
-  transform:scale(1.15);
+  box-shadow:0 0 14px var(--accent);
 }
 
-.thumb{
-  position:absolute;
-  top:-6px;
-  width:26px;
-  height:26px;
-  border-radius:50%;
-  background:white;
-  transform:translateX(-13px);
+/* WAVES */
+.wave{
+  display:flex;
+  justify-content:center;
+  gap:4px;
+  margin-top:18px;
+}
+.wave span{
+  width:4px;
+  height:14px;
+  background:var(--accent);
+  opacity:.4;
+  animation:wave 1.2s infinite ease-in-out;
+}
+.wave span:nth-child(2){animation-delay:.1s}
+.wave span:nth-child(3){animation-delay:.2s}
+.wave span:nth-child(4){animation-delay:.3s}
+.wave span:nth-child(5){animation-delay:.4s}
+
+@keyframes wave{
+  0%,100%{height:10px}
+  50%{height:22px}
 }
 </style>
 </head>
@@ -220,7 +247,7 @@ input[type=range]{
 
 <div class="overlay"></div>
 
-<div class="enter" id="enter"><span>click</span></div>
+<div class="enter" id="enter"><span>CLICK</span></div>
 
 <div class="card" id="card">
   <div class="profile">
@@ -233,19 +260,16 @@ input[type=range]{
       <input type="range" id="progress" value="0">
     </div>
 
+    <div class="wave">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
     <div class="volume">
       <svg id="mute" viewBox="0 0 24 24">
         <path d="M3 9v6h4l5 5V4L7 9H3z"/>
       </svg>
       <input type="range" id="volume" min="0" max="1" step="0.01" value="0.7">
     </div>
-  </div>
-</div>
-
-<div class="color-picker-circle" id="colorCircle"></div>
-<div class="color-picker-popup" id="colorPopup">
-  <div class="color-slider" id="colorSlider">
-    <div class="thumb" id="thumb"></div>
   </div>
 </div>
 
@@ -291,13 +315,8 @@ volume.oninput=()=>{
 }
 
 mute.onclick=()=>{
-  if(audio.volume>0){
-    audio.volume=0
-    volume.value=0
-  }else{
-    audio.volume=.7
-    volume.value=.7
-  }
+  audio.volume=audio.volume>0?0:.7
+  volume.value=audio.volume
   updateVolumeFill()
 }
 
@@ -308,28 +327,15 @@ let i=0,d=false
 setInterval(()=>{
   if(!d){i++;bioEl.textContent=bioText.slice(0,i);if(i===bioText.length)setTimeout(()=>d=true,1200)}
   else{i--;bioEl.textContent=bioText.slice(0,i);if(i===0)d=false}
-},140)
+},120)
 
-
-const slider=document.getElementById('colorSlider')
-const thumb=document.getElementById('thumb')
-
-slider.onmousedown=e=>{
-  const move=e=>{
-    let x=e.clientX-slider.getBoundingClientRect().left
-    x=Math.max(0,Math.min(slider.offsetWidth,x))
-    thumb.style.left=x+'px'
-    const hue=x/slider.offsetWidth*360
-    const color=`hsl(${hue},100%,50%)`
-    document.documentElement.style.setProperty('--accent',color)
-    circle.style.background=color
-  }
-  move(e)
-  window.addEventListener('mousemove',move)
-  window.addEventListener('mouseup',()=>window.removeEventListener('mousemove',move),{once:true})
-}
+/* 3D TILT */
+document.addEventListener('mousemove',e=>{
+  const x=(e.clientX/window.innerWidth-.5)*16
+  const y=(e.clientY/window.innerHeight-.5)*-16
+  card.style.transform=`translate(-50%,-50%) rotateY(${x}deg) rotateX(${y}deg)`
+})
 </script>
 
 </body>
 </html>
-
